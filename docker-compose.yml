@@ -1,0 +1,16 @@
+version: '3.7'
+services:
+   letsencrypt:
+      image: certbot/certbot:latest
+      entrypoint: "/entrypoint.sh"
+      environment:
+         - DOMAINS
+      volumes:
+         - ./entrypoint.sh:/entrypoint.sh
+         - ./letsencrypt:/etc/letsencrypt
+      networks:
+         - haproxy-controller_haproxy-controller
+
+networks:
+   haproxy-controller_haproxy-controller:
+      external: true

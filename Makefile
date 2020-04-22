@@ -3,6 +3,8 @@ RECIPIENT=bennyjbergstein@gmail.com
 PREFIX ?= /certs
 CERT_DIR ?= letsencrypt
 
+DOMAIN_ARGS=$(addprefix -d ,${DOMAINS})
+
 define ARCHIVE
 ${CERT_DIR}.zip
 endef
@@ -38,3 +40,6 @@ clean:
 
 push: zip encrypt upload clean
 pull: download decrypt
+
+create:
+	DOMAINS="${DOMAIN_ARGS}" docker-compose -p https run --rm letsencrypt
