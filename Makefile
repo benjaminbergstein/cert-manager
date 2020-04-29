@@ -23,11 +23,14 @@ bucket:
 zip:
 	zip -r ${ARCHIVE} letsencrypt
 
+unzip:
+	unzip ${ARCHIVE}
+
 encrypt:
 	gpg -r ${RECIPIENT} -e < ${ARCHIVE} > ${ENCRYPTED_ARCHIVE}
 
 decrypt:
-	gpg -d < ${ENCRYPTED_ARCHIVE} > ${ARCHIVE}
+	gpg -d ${ENCRYPTED_ARCHIVE} > ${ARCHIVE}
 
 upload:
 	s3cmd put ${ENCRYPTED_ARCHIVE} ${S3_URL}/${ENCRYPTED_ARCHIVE}
@@ -39,7 +42,7 @@ clean:
 	rm ${ARCHIVE} ${ENCRYPTED_ARCHIVE}
 
 push: zip encrypt upload clean
-pull: download decrypt
+pull: download decrypt unzip
 
 create:
 	DOMAINS="${DOMAIN_ARGS}" docker-compose -p https run --rm letsencrypt
